@@ -22,7 +22,7 @@ pip install marlib
 Или установите из исходного кода:
 
 ```bash
-git clone https://github.com/your-username/marlib.git
+git clone https://github.com/mrHolaDays/MAR/edit/main/
 cd marlib
 pip install -e .
 ```
