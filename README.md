@@ -23,7 +23,6 @@ pip install marlib
 
 ```bash
 git clone https://github.com/mrHolaDays/MAR/edit/main/
-cd marlib
 pip install -e .
 ```
 
