@@ -1,8 +1,7 @@
 import os
 import time
-from config import *
-from serialization import create_case, unpack_case, create_cord_block
-
+from .config import *
+from .serialization import create_case, unpack_case, create_cord_block
 # Глобальная переменная для отслеживания свободного пространства
 FREE_SPACE = {}
 

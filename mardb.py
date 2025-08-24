@@ -1,10 +1,10 @@
 import socket
 import json
 import os
-from config import *
-import database
-import file_operations
-import serialization
+from .config import *
+from . import database
+from . import file_operations
+from . import serialization
 
 class MARDB:
     def __init__(self, mode='local', host='localhost', port=9999):
@@ -226,21 +226,21 @@ def init_db(mode='local', host='localhost', port=9999):
 
 
 # Пример использования
-if __name__ == '__main__':
-    # Локальный режим
-    db_local = init_db('local')
-    db_local.create_database('test.marm')
-    db_local.create_table('test.marm', 'users', ['id', 'name', 'age'])
-    db_local.insert_into_table('test.marm', 'users', [1, 2, 3], 'John Doe')
-    results = db_local.select_from_table('test.marm', 'users')
-    print(results)
-    db_local.close()
+# if __name__ == '__main__':
+#     # Локальный режим
+#     db_local = init_db('local')
+#     db_local.create_database('test.marm')
+#     db_local.create_table('test.marm', 'users', ['id', 'name', 'age'])
+#     db_local.insert_into_table('test.marm', 'users', [1, 2, 3], 'John Doe')
+#     results = db_local.select_from_table('test.marm', 'users')
+#     print(results)
+#     db_local.close()
     
-    # Серверный режим (предполагая, что сервер запущен)
-    db_server = init_db('server', 'localhost', 9999)
-    db_server.load_database('test_server.marm', 'full')
-    db_server.create_table('test_server.marm', 'products', ['id', 'name', 'price'])
-    db_server.insert_into_table('test_server.marm', 'products', [1, 2, 3], 'Laptop')
-    results = db_server.select_from_table('test_server.marm', 'products')
-    print(results)
-    db_server.close()
+#     # Серверный режим (предполагая, что сервер запущен)
+#     db_server = init_db('server', 'localhost', 9999)
+#     db_server.load_database('test_server.marm', 'full')
+#     db_server.create_table('test_server.marm', 'products', ['id', 'name', 'price'])
+#     db_server.insert_into_table('test_server.marm', 'products', [1, 2, 3], 'Laptop')
+#     results = db_server.select_from_table('test_server.marm', 'products')
+#     print(results)
+#     db_server.close()

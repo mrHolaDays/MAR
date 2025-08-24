@@ -10,10 +10,10 @@ import time
 import pickle
 from datetime import datetime
 from collections import deque
-from config import *
-import database
-import file_operations
-import serialization
+from .config import *
+from . import database
+from . import file_operations
+from . import serialization
 
 class MARDatabaseServer:
     def __init__(self, host='localhost', port=9999, log_level='INFO', 

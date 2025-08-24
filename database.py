@@ -1,7 +1,7 @@
 import os
 import struct
-from config import *
-from file_operations import create_cases_file, write_case_to_file, find_case_in_file, read_all_cases
+from .config import *
+from .file_operations import create_cases_file, write_case_to_file, find_case_in_file, read_all_cases
 
 def create_database(db_name):
     """Создает новую базу данных"""
