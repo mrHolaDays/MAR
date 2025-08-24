@@ -13,13 +13,7 @@
 
 ## Установка
 
-Установите библиотеку через pip:
-
-```bash
-pip install marlib
-```
-
-Или установите из исходного кода:
+Установите из исходного кода:
 
 ```bash
 git clone https://github.com/mrHolaDays/MAR/edit/main/
