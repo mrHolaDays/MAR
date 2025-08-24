@@ -1,121 +1,41 @@
-# MAR Database Manager
+# MAR Database Library (marlib)
 
-Приложение для работы с базами данных в формате MAR. Проект включает графический интерфейс, консольное приложение, серверную реализацию и библиотеку для работы с базами данных.
+Библиотека для работы с базами данных в формате MAR. Предоставляет API для создания, управления и взаимодействия с базами данных, поддерживает как локальную работу, так и клиент-серверную архитектуру.
 
 ## Возможности
 
 - Создание и управление базами данных в формате MAR
-- Работа с таблицами и записями через графический интерфейс
-- Консольное управление базой данных
+- Работа с таблицами и записями через программный интерфейс
 - Клиент-серверная архитектура с кэшированием и синхронизацией
 - Поддержка множества типов данных Python
-- Многоязычный интерфейс (русский/английский)
-- Темная и светлая темы оформления
+- Сериализация и десериализация сложных структур данных
+- Оптимизация хранения данных через дефрагментацию
 
-## Установка и запуск
+## Установка
 
-### Требования
-
-- Python 3.7+
-- Зависимости: `PyQt5`, `colorama`, `pyfiglet`, `simple-term-menu`
-
-Установите зависимости:
+Установите библиотеку через pip:
 
 ```bash
-pip install PyQt5 colorama pyfiglet simple-term-menu
+pip install marlib
 ```
 
-### Графическое приложение
+Или установите из исходного кода:
 
 ```bash
-python app.py
+git clone https://github.com/your-username/marlib.git
+cd marlib
+pip install -e .
 ```
 
-### Консольное приложение
-
-```bash
-python app_console.py
-```
-
-### Сервер базы данных
-
-```bash
-python mardb_server.py [--host localhost] [--port 9999] [--log-level INFO]
-```
-
-## Использование графического приложения
-
-1. **Создание базы данных**: File → New Database
-2. **Открытие базы**: File → Open Database
-3. **Создание таблицы**: Выберите базу → нажмите "Create Table"
-4. **Добавление записей**: Перейдите на вкладку "Add Record"
-5. **Поиск записей**: Используйте вкладку "Search"
-6. **Просмотр записей**: Вкладка "Browse"
-
-### Особенности интерфейса
-
-- Поддержка тем (Settings → Theme)
-- Смена языка (Settings → Language)
-- Инструкция по использованию (Help → Instructions)
-
-## Использование консольного приложения
-
-Консольное приложение предоставляет текстовый интерфейс для управления базами данных:
-
-```bash
-# Главное меню
-1. Create Database
-2. Open Database
-3. Close Database
-4. Create Table
-5. Add Record
-6. Search Record
-7. View Records
-8. Defragment Database
-9. Settings
-10. Instructions
-11. Exit
-```
-
-### Настройки консольного приложения
-
-- Смена языка через меню Settings
-- Автоматическое сохранение настроек в `console_settings.json`
-
-## Работа с сервером
-
-### Запуск сервера
-
-```bash
-python mardb_server.py --host localhost --port 9999 --log-level INFO
-```
-
-### Режимы загрузки данных
-
-- `full` - полная загрузка всех данных в память
-- `part` - частичная загрузка на основе .marl файла
-- `fast` - загрузка данных по требованию
-
-### Клиентское подключение
-
-```python
-from mardb import init_db
-
-# Локальный режим
-db = init_db('local')
-# Серверный режим
-db = init_db('server', 'localhost', 9999)
-```
-
-## Использование библиотеки mardb
+## Быстрый старт
 
 ### Базовые операции
 
 ```python
-from mardb import init_db
+import marlib
 
-# Инициализация
-db = init_db('local')  # или 'server'
+# Инициализация в локальном режиме
+db = marlib.MARDB(mode='local')
 
 # Создание базы данных
 db.create_database('test.marm')
@@ -128,17 +48,100 @@ db.insert_into_table('test.marm', 'users', [1, 2, 3], 'John Doe')
 
 # Поиск записи
 result = db.find_in_table('test.marm', 'users', [1, 2, 3])
+print(result)
 
 # Выборка всех записей
 records = db.select_from_table('test.marm', 'users')
+print(records)
 
-# Дефрагментация
+# Дефрагментация базы данных
 db.defragment_database('test.marm')
 ```
 
-## Структура и синтаксис базы данных
+### Работа с сервером
 
-### Формат файла базы данных (.marm)
+```python
+import marlib
+
+# Подключение к серверу
+db = marlib.MARDB(mode='server', host='localhost', port=9999)
+
+# Загрузка базы данных на сервере
+db.load_database('test.marm', mode='fast')
+
+# Далее операции аналогичны локальному режиму
+```
+
+### Запуск сервера
+
+```python
+from marlib import MARDatabaseServer
+
+# Создание и запуск сервера
+server = MARDatabaseServer(host='localhost', port=9999, log_level='INFO')
+server.start()
+```
+
+Или через командную строку:
+
+```bash
+python -m marlib.mardb_server --host localhost --port 9999 --log-level INFO
+```
+
+## Структура проекта
+
+```
+marlib/
+├── __init__.py         # Основной файл пакета
+├── config.py           # Конфигурационные константы
+├── database.py         # Функции работы с БД
+├── file_operations.py  # Операции с файлами
+├── mardb.py           # Основной класс для работы с БД
+├── mardb_server.py    # Серверная реализация
+└── serialization.py   # Сериализация данных
+```
+
+## Формат данных MAR
+
+### Структура базы данных
+
+- Файл базы данных имеет расширение `.marm`
+- Данные таблиц хранятся в отдельных файлах с расширением `.marc`
+- Конфигурация таблиц хранится в файлах с расширением `.mart`
+
+### Координатная адресация
+
+Каждая запись в таблице идентифицируется набором координат (целых чисел), которые используются для поиска и доступа к записям.
+
+### Поддерживаемые типы данных
+
+Библиотека поддерживает сериализацию множества типов данных Python:
+
+- Базовые типы: str, int, float, bool, None
+- Коллекции: list, tuple, set, dict, deque
+- Специальные типы: datetime, UUID, Decimal, Path
+- И многие другие
+
+## Документация
+
+Полная документация доступна в файле [MAR.md](MAR.md), который содержит:
+
+- Подробное описание формата MAR
+- API reference библиотеки
+- Примеры использования
+- Описание внутренней структуры данных
+
+---
+
+# MAR Format Documentation
+
+## Общее описание
+
+Формат MAR (Multidimensional Array Record) - это специализированный формат для хранения структурированных данных с поддержкой многомерной адресации записей.
+
+## Структура файлов
+
+### Файл базы данных (.marm)
 
 1. **Заголовок**:
    - Версия базы данных (3 байта)
@@ -159,7 +162,7 @@ db.defragment_database('test.marm')
      - Имя колонки (строка)
      - Разделитель (0xFA)
 
-### Формат файлов данных (.marc)
+### Файлы данных таблиц (.marc)
 
 1. **Заголовок**:
    - ID таблицы (2 байта)
@@ -176,34 +179,76 @@ db.defragment_database('test.marm')
 3. **Данные**:
    - Сериализованные данные записей
 
-### Сериализация данных
+## API Reference
 
-Библиотека поддерживает сериализацию множества типов данных Python:
+### Класс MARDB
 
-- Базовые типы: str, int, float, bool, None
-- Коллекции: list, tuple, set, dict, deque
-- Специальные типы: datetime, UUID, Decimal, Path
-- И многие другие
+Основной класс для работы с базами данных.
 
-## Файловая структура проекта
-
+```python
+db = MARDB(mode='local', host='localhost', port=9999)
 ```
-MAR-Database-Manager/
-│
-├── app.py              # Графическое приложение
-├── app_console.py      # Консольное приложение
-├── mardb.py           # Основная библиотека
-├── mardb_server.py    # Сервер базы данных
-├── config.py          # Конфигурационные константы
-├── database.py        # Функции работы с БД
-├── file_operations.py # Операции с файлами
-├── serialization.py   # Сериализация данных
-│
-├── cases/             # Директория для файлов данных
-├── config/            # Директория для конфигураций таблиц
-│
-├── MAR.info           # Файл с инструкциями
-└── console_settings.json # Настройки консольного приложения
+
+**Методы**:
+- `create_database(db_name)`
+- `create_table(db_name, table_name, columns)`
+- `get_tables(db_name)`
+- `find_in_table(db_name, table_name, cords)`
+- `insert_into_table(db_name, table_name, cords, data)`
+- `select_from_table(db_name, table_name)`
+- `defragment_database(db_name)`
+- `load_database(db_name, mode='fast')`
+- `unload_database(db_name)`
+
+### Класс MARDatabaseServer
+
+Сервер для работы с базами данных в сетевом режиме.
+
+```python
+server = MARDatabaseServer(host='localhost', port=9999, log_level='INFO')
+```
+
+## Примеры использования
+
+### Создание сложной структуры данных
+
+```python
+import marlib
+from datetime import datetime
+import decimal
+
+db = marlib.MARDB(mode='local')
+db.create_database('complex_data.marm')
+db.create_table('complex_data.marm', 'transactions', ['id', 'date', 'amount'])
+
+# Добавление записи с сложными данными
+transaction = {
+    'id': 12345,
+    'date': datetime.now(),
+    'amount': decimal.Decimal('199.99'),
+    'items': ['product1', 'product2', 'product3'],
+    'metadata': {
+        'user': 'john_doe',
+        'device': 'mobile'
+    }
+}
+
+db.insert_into_table('complex_data.marm', 'transactions', [1, 2, 3], transaction)
+```
+
+### Работа с сервером
+
+```python
+import marlib
+
+# Клиентская часть
+db = marlib.MARDB(mode='server', host='localhost', port=9999)
+db.load_database('my_database.marm')
+
+# Серверная часть (запуск в отдельном процессе)
+from marlib import MARDatabaseServer
+server = MARDatabaseServer(host='localhost', port=9999)
+server.start()
 ```
 
 ## Принципы работы
@@ -212,3 +257,12 @@ MAR-Database-Manager/
 2. **Фрагментация данных**: Данные хранятся в нескольких файлах для оптимизации
 3. **Кэширование**: Серверная версия использует интеллектуальное кэширование
 4. **Синхронизация**: Автоматическая синхронизация изменений с диском
+
+## Советы по использованию
+
+1. Для больших баз данных используйте серверный режим с кэшированием
+2. Регулярно выполняйте дефрагментацию для оптимизации производительности
+3. Используйте соответствующий режим загрузки в зависимости от patterns доступа к данным
+4. Для сложных структур данных убедитесь в поддержке сериализации нужных типов
+
+Версия: 1.0
